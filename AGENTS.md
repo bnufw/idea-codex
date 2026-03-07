@@ -80,6 +80,16 @@
 - **强论文拆解**: 用 `paper-miner` 抽取 framing、method pattern 与 evaluation 设计
 - **工程启发补充**: 用 `kaggle-miner` 找可迁移 baseline、数据处理技巧和工程约束
 
+### 研究构思标准子流程（`research-ideation` + `literature-reviewer` + Zotero MCP）
+
+当用户表达“开始研究”“文献综述”“生成阅读笔记”等意图时，优先进入下面这条标准子流程：
+
+1. **5W1H 问题框定**：围绕 What、Why、Who、When、Where、How 梳理主题、动机、对象、时空范围与初步方法；这样做是为了先把检索边界钉住，避免后续文献搜索过散。
+2. **文献搜索与导入**：先用实时 WebSearch 找候选论文，再优先提取 DOI 导入 Zotero；这样后续笔记、引用和全文读取会更稳定，也更方便沉淀阅读记录。
+3. **PDF 与全文分析**：若条目已入 Zotero，优先批量附加 PDF，再按需读取全文做深度分析；如果 Zotero MCP 不稳定，要明确是桥接故障还是文献本身缺失，不要把连接问题说成“没有资料”。
+4. **Gap 分析**：至少从文献、方法论、应用、跨学科、时间这 5 个维度判断 gap，并收敛出 2-3 个真正值得继续追的研究机会。
+5. **研究问题收敛**：用 SMART 原则把机会改写成具体、可衡量、可验证的问题，同时尽量写清比较对象、主要指标和失败标准。
+
 ---
 
 ## 输出标准
@@ -134,6 +144,7 @@
 
 ### Skill 使用协议
 - 每次响应前，先判断当前问题是否命中本项目某个 skill
+- 若用户表达“开始研究”“文献综述”“生成阅读笔记”等意图，优先考虑 `research-ideation`，必要时联动 `literature-reviewer` 与 Zotero MCP
 - 优先使用最小必要 skill 集合，不机械展开全部 skills
 - 若引用、年份、venue、近作时间线会影响判断，优先考虑 `citation-verification` 或实时检索
 - 若需要输出持续推进文档，优先考虑 `planning-with-files`
