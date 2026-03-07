@@ -1,0 +1,43 @@
+# Idea Workspace
+# Idea-stage Codex setup for literature review, gap finding, and research direction design.
+
+model = "gpt-5.4"
+model_reasoning_effort = "xhigh"
+plan_mode_reasoning_effort = "xhigh"
+disable_response_storage = true
+model_context_window = 1000000
+model_auto_compact_token_limit = 233000
+service_tier = "fast"
+sandbox_mode = "workspace-write"
+project_doc_fallback_filenames = []
+
+[features]
+multi_agent = true
+memories = true
+skill_approval = true
+fast_mode = true
+child_agents_md = true
+
+[mcp_servers.zotero]
+command = "zotero-mcp"
+args = ["serve"]
+enabled = true
+
+[mcp_servers.zotero.env]
+ZOTERO_API_KEY = "your-api-key"
+ZOTERO_LIBRARY_ID = "your-library-id"
+ZOTERO_LIBRARY_TYPE = "user"
+UNPAYWALL_EMAIL = "your-email@example.com"
+UNSAFE_OPERATIONS = "all"
+
+[agents.literature-reviewer]
+description = "Systematic literature review and gap analysis for idea discovery."
+config_file = "agents/literature-reviewer/config.toml"
+
+[agents.paper-miner]
+description = "Extract method patterns and problem framings from strong papers."
+config_file = "agents/paper-miner/config.toml"
+
+[agents.kaggle-miner]
+description = "Mine practical baselines and experimental heuristics from Kaggle solutions."
+config_file = "agents/kaggle-miner/config.toml"

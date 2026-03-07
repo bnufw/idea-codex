@@ -1,0 +1,2 @@
+# Agent override
+sandbox_mode = "workspace-write"
