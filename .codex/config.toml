@@ -17,6 +17,7 @@ memories = true
 skill_approval = true
 fast_mode = true
 child_agents_md = true
+default_mode_request_user_input = true
 
 [agents]
 max_threads = 4

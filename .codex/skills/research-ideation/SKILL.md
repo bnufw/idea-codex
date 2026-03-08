@@ -1,198 +1,94 @@
 ---
 name: Research Ideation
-description: This skill should be used when the user asks to "brainstorm research ideas", "use 5W1H framework", "identify research gaps", "conduct gap analysis", "start research project", "conduct literature review", "define research question", "select research method", "plan research", or mentions research project initiation phase. Provides comprehensive guidance for research startup workflow from idea generation to planning.
-version: 0.1.0
+description: Use when the user wants to brainstorm research ideas, identify gaps, define a research question, or plan an early-stage project from a user-provided Markdown brief and local paper notes in `papers/**/*.md`.
+version: 0.2.0
 ---
 
 # Research Ideation
 
-Supports the complete workflow for the research project initiation phase, from literature review to research question definition, method selection, and research planning.
+This skill supports the early ideation workflow using only:
+- a user-provided Markdown brief
+- local paper notes in `papers/**/*.md`
 
-## Core Features
-
-### 1. Idea Brainstorming (5W1H Framework)
-
-Systematically brainstorm research ideas using the 5W1H framework:
-- **What**: What problem or phenomenon to study
-- **Why**: Why this problem is important
-- **Who**: Target audience and stakeholders
-- **When**: Time scope and context of the research
-- **Where**: Application scenarios and domains
-- **How**: Preliminary research methodology ideas
-
-**Integration with superpowers:brainstorming**: Can invoke the superpowers:brainstorming skill for interactive brainstorming to help rapidly generate and evaluate research ideas.
-
-### 2. Literature Review
-
-Systematically search, analyze, and synthesize related literature:
-- Build effective search keywords
-- Search via WebSearch across academic databases (arXiv, Google Scholar, etc.)
-- Screen and evaluate paper quality
-- Identify research trends and gaps
-- Generate structured literature reviews
-- **Zotero Integration**: Papers are automatically added to Zotero via DOI, organized into topic-based collections, and open-access PDFs are auto-attached for full-text reading
-
-### 3. Gap Analysis
-
-Systematically identify and evaluate research gaps:
-- **Literature gaps**: Identify topics or questions not yet sufficiently studied
-- **Methodological gaps**: Discover limitations and improvement opportunities in existing methods
-- **Application gaps**: Identify opportunities for theory-to-practice transfer
-- **Interdisciplinary gaps**: Discover research opportunities at the intersection of different fields
-- **Temporal gaps**: Identify new research needs arising from changes over time
-
-**Analysis Dimensions:**
-- Coverage of research topics
-- Comparison of strengths and weaknesses of existing methods
-- Completeness of experimental setups
-- Availability of datasets and benchmarks
-- Gap between theory and practice
-
-### 4. Research Question Definition
-
-Formulate specific research questions based on literature analysis:
-- Identify research gaps and opportunities
-- Apply SMART principles to formulate questions
-- Evaluate importance, novelty, and feasibility
-- Define research objectives and expected contributions
-
-### 5. Method Selection
-
-Select appropriate research methods:
-- Analyze strengths and weaknesses of existing methods
-- Evaluate method applicability
-- Identify required technologies and resources
-- Consider method feasibility
-
-### 6. Research Planning
-
-Develop detailed research plans:
-- Plan research timeline
-- Define milestones and deliverables
-- Identify potential risks
-- Assess resource requirements
+It does not use Zotero or online paper search during the default ideation stage.
 
 ## When to Use
 
-### Scenarios for This Skill
+Use this skill when the user wants to:
+- brainstorm or refine a research idea
+- understand a local paper set before proposing a question
+- identify gaps from existing local paper notes
+- turn a vague direction into a testable research question
+- produce a research plan or minimal validation sketch
 
-Use the research-ideation skill in the following situations:
+## Required Inputs
 
-1. **Starting a new research project** - Have research interests but no clear research question yet
-2. **Literature review** - Need to systematically understand a research field
-3. **Research question formulation** - Need to transform vague ideas into specific research questions
-4. **Method selection** - Need to choose appropriate research methods and technical approaches
-5. **Research planning** - Need to plan research timeline and resources
+### 1. User brief
 
-### Typical Workflow
+The user should provide a Markdown file describing as much of the following as possible:
+- topic or problem statement
+- target task or scenario
+- hard constraints and non-goals
+- known pain points or hypotheses
+- optional target venue, dataset, metric, or engineering preference
 
-```
-Research interest → Idea brainstorming (5W1H) → Literature review → Gap analysis → Define question → Select method → Create plan
-```
+### 2. Local papers
 
-**Output Files:**
-- `literature-review.md` - Structured literature review
-- `research-proposal.md` - Research proposal (including question, method, plan)
-- `references.bib` - References in BibTeX format
-- Zotero collection with organized papers and PDFs
+Use `papers/**/*.md` as the only paper source for this skill.
 
-## Integration with Other Systems
+Rules:
+- read only the subset relevant to the user brief
+- do not invent details missing from the notes
+- if the local notes are weak, explicitly downgrade confidence
 
-### Complete Research Workflow
+## Workflow
 
-```
-research-ideation (Research initiation)
-    ↓
-Experiment execution (completed by user)
-    ↓
-results-analysis (Results analysis)
-    ↓
-ml-paper-writing (Paper writing)
-```
+1. Read the user brief first.
+   - Extract problem, constraints, assumptions, non-goals, and what counts as a better idea.
 
-### Data Flow
+2. Build a local paper map.
+   - Find the relevant files in `papers/**/*.md`.
+   - Extract method family, core mechanism, assumptions, strengths, limitations, and reusable patterns.
 
-- **research-ideation output** → Guides experiment design and method selection
-- **Experimental results** → results-analysis for statistical analysis
-- **Analysis results** → Related Work and Methods sections of ml-paper-writing
+3. Compare the brief against the local paper map.
+   - Identify what is already covered.
+   - Identify what is missing, contradictory, weakly evaluated, or overly narrow.
 
-### Zotero Integration
+4. Produce a grounded gap view.
+   - Distinguish real capability gaps from narrative or packaging gaps.
+   - Call out where the evidence is strong and where it is incomplete.
 
-Through the Zotero MCP server, the research-ideation workflow automates literature management:
+5. Form one or more testable candidate questions.
+   - Keep the question tied to a concrete task, comparison target, metric, and failure condition.
 
-- **Paper Discovery**: WebSearch finds relevant papers across academic databases
-- **Auto-Import**: Extract DOIs from search results, use `add_items_by_doi` to add papers with full metadata
-- **Collection Organization**: `create_collection` creates topic-based collections with standard sub-collections (Core Papers, Methods, Applications, Baselines, To-Read)
-- **PDF Attachment**: `find_and_attach_pdfs` automatically finds and attaches open-access PDFs via Unpaywall
-- **Full-Text Reading**: `get_item_fulltext` reads indexed PDF content for analysis and note-taking
-- **Library Search**: `search_library` and `get_collection_items` browse existing papers to avoid duplicates
+6. Draft a minimal validation plan.
+   - State what evidence would justify implementation.
+   - State what would falsify the idea early.
 
-### Key Configuration
+## Agent Use
 
-- **Literature search scope**: Papers from the last 3 years by default, configurable
-- **Output format**: Markdown format for easy editing and version control
-- **Citation management**: Generates references in BibTeX format
-- **Zotero collection naming**: `Research-{topic}-{YYYY}` format
-- **PDF auto-attach**: Enabled by default for open-access papers via Unpaywall
+- Use `paper-miner` when the local paper set is large and heterogeneous.
+- Use `literature-reviewer` when the job is to synthesize and contrast many local paper notes.
+- Do not switch to online search unless the parent task explicitly says the workflow has moved into a separate post-idea verification stage.
 
-## Additional Resources
+## Source Rules
 
-### Reference Files
+- Base every core judgment on the user brief or `papers/**/*.md`.
+- Treat local paper notes as the evidence layer for this skill.
+- If a claim cannot be supported by the local notes, say so directly.
+- Do not turn missing evidence into a confident novelty claim.
 
-Detailed methodology guides, loaded on demand:
+## Output Rules
 
-- **`references/5w1h-framework.md`** - 5W1H Framework Guide
-  - What, Why, Who, When, Where, How — six dimensions
-  - Systematic approach to brainstorming research ideas
-  - Integration with superpowers:brainstorming
-  - Usage examples and best practices
+- Respond in Chinese.
+- Keep the answer summary-first.
+- Make reused patterns and changed assumptions explicit.
+- State uncertainty and missing evidence explicitly.
+- Prefer outputs such as gap lists, candidate questions, risk tables, and minimal validation plans.
 
-- **`references/literature-search-strategies.md`** - Literature Search Strategies
-  - Keyword construction techniques
-  - Academic database selection (arXiv, Google Scholar)
-  - Search tips and screening criteria
-  - Paper quality evaluation methods
-  - DOI extraction and Zotero auto-import workflow
+## Failure Handling
 
-- **`references/zotero-integration-guide.md`** - Zotero MCP Integration Guide
-  - Available Zotero MCP tools (browse, add, cite)
-  - Collection organization strategy and naming conventions
-  - Automated workflow: WebSearch → DOI → Zotero import → PDF attach
-  - Full-text reading and structured note-taking
-  - Common issues and troubleshooting
-
-- **`references/gap-analysis-guide.md`** - Gap Analysis Guide
-  - 5 types of Gap Analysis (literature, methodological, application, interdisciplinary, temporal)
-  - 5 analysis dimensions
-  - Systematic approach to identifying research opportunities
-  - Usage examples and best practices
-
-- **`references/research-question-formulation.md`** - Research Question Formulation
-  - Applying SMART principles
-  - Question type classification (exploratory, confirmatory, applied)
-  - Evaluation criteria (importance, novelty, feasibility)
-  - Defining research objectives and contributions
-
-- **`references/method-selection-guide.md`** - Method Selection Guide
-  - Common research method classification
-  - Method applicability analysis
-  - Strengths and weaknesses comparison
-  - Resource requirement assessment
-
-- **`references/research-planning.md`** - Research Planning
-  - Timeline planning methods
-  - Milestone definition techniques
-  - Risk identification and mitigation
-  - Resource allocation strategies
-
-### Example Files
-
-Complete working examples:
-
-- **`examples/example-literature-review.md`** - Literature Review Example
-  - Demonstrates structured literature review format
-  - Includes research trend analysis and gap identification
-
-- **`examples/example-research-proposal.md`** - Research Proposal Example
-  - Demonstrates complete research proposal structure
-  - Includes complete examples of question, method, and plan
+- Missing user brief: ask for a valid Markdown path.
+- Empty `papers/`: say that local paper grounding is unavailable and stop or downgrade confidence.
+- Irrelevant local notes: say that the current corpus does not support the requested direction well.
+- Weak novelty evidence: avoid claims such as `first`, `novel`, or `state of the art`.

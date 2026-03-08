@@ -28,7 +28,7 @@
 - 喜欢先把真实约束、真实边界、真实风险钉死，再推进分析
 - 不接受“像是有 gap”这类空泛判断
 - 希望看到真实论文、真实时间线、真实相邻工作，而不是只看记忆
-- 因为用户是编程初学者，涉及检索命令、Zotero、CLI 工作流时要补一句原因解释
+- 因为用户是编程初学者，涉及文件路径、CLI 工作流或较复杂命令时要补一句原因解释
 
 ---
 
@@ -45,11 +45,11 @@
 - 如目录不存在，可按需创建
 
 ### 任务执行原则
-- 复杂问题先收敛问题定义，再扩展文献与方案
-- 研究判断优先基于真实论文、真实代码、真实结果和实时检索
-- 涉及近作、venue、citation、工具能力或时间敏感信息时，优先查实时来源
-- 不捏造引用、不脑补相关工作、不把猜测包装成结论
+- 复杂问题先收敛问题定义，再扩展本地论文与方案
+- `idea` 生成阶段的研究判断优先基于用户输入 Markdown、`papers/**/*.md`、真实代码和真实结果
+- 不把 Zotero、WebSearch、arXiv 或其他在线论文检索当作默认论文来源
 - 若证据不足以支撑“novel”“first”“state of the art”之类表述，必须明确降级措辞
+- 不捏造引用、不脑补相关工作、不把猜测包装成结论
 
 ### 工作风格
 - **任务管理**: 优先把讨论沉淀成可继续推进的 Markdown 计划
@@ -60,25 +60,31 @@
 
 ## 核心工作流
 
-### Idea 工作流（5 阶段）
+### Idea 工作流（本地 papers-only）
 
 ```
-问题空间梳理 → literature landscape → gap 判断 → research question 收敛 → 最小验证设计
+问题空间梳理 → 本地论文方法图谱 → gap 判断 → candidate idea 收敛 → 最小验证设计
 ```
 
 | 阶段 | 核心目标 | 典型输出 |
 |------|----------|----------|
 | 1. 问题空间梳理 | 明确主题、约束、目标场景 | 主题边界、关键词、排除项 |
-| 2. 文献格局建立 | 找主线方法、代表工作、最新趋势 | landscape summary、论文清单 |
+| 2. 本地论文方法图谱 | 从 `papers/**/*.md` 提炼方法、假设与局限 | method map、paper shortlist |
 | 3. gap 判断 | 区分真实空缺与叙事性空缺 | gap list、closest baseline 对照 |
-| 4. 问题收敛 | 把兴趣改写成可验证问题 | candidate research questions |
-| 5. 最小验证设计 | 评估是否值得进入实现阶段 | novelty / feasibility / risk 表、实验草案 |
+| 4. candidate idea 收敛 | 把用户兴趣改写成一个更合理的 idea | candidate idea |
+| 5. 最小验证设计 | 评估是否值得进入实现阶段 | novelty / feasibility / risk 对照表、实验草案 |
 
 ### 支撑工作流
 
-- **Zotero 集成**: 优先用 Zotero MCP 管理已有文献、笔记与引用元数据
+- **本地论文源**: `papers/**/*.md` 是默认且唯一的 ideation 论文来源
+- **用户 brief**: 运行时必须提供一个 Markdown 输入路径，用来说明方向、约束、非目标和偏好
 - **强论文拆解**: 用 `paper-miner` 抽取 framing、method pattern 与 evaluation 设计
 - **工程启发补充**: 用 `kaggle-miner` 找可迁移 baseline、数据处理技巧和工程约束
+
+### 阶段边界
+
+- `idea` 生成阶段：只读本地 `papers/**/*.md` 与用户 brief
+- novelty / feasibility 核实：若明确进入后置核实阶段，可单独使用联网子代理；该阶段不属于默认 ideation workflow
 
 ---
 
@@ -96,7 +102,7 @@
 - **summary-first**：先给结论，再展开依据
 - **assumption 明确**：哪些是用户已给条件，哪些是暂定前提
 - **uncertainty 明确**：哪些结论依赖未验证信息
-- **evidence 对齐**：每个核心判断都能追溯到论文、代码、结果或官方信息
+- **evidence 对齐**：每个核心判断都能追溯到本地论文笔记、代码或结果
 - **边界清楚**：明确说明 idea 还缺什么，不能默认已经 ready
 
 ---
@@ -104,13 +110,14 @@
 ## 研究判断规则
 
 ### Novelty 判断
-- novelty 必须相对最近、最强、最相邻的工作来判断
+- novelty 必须先相对本地 `papers/**/*.md` 中最近、最强、最相邻的工作来判断
 - 不把“换数据集”“换表述”“堆组件”直接当成研究贡献
 - 若贡献主要来自 framing、evaluation、setting 或 pipeline，必须明确指出其贡献类型
+- 若需要在线补核实，必须显式声明已经离开默认 ideation 阶段
 
 ### Gap 判断
 - 区分 **真实能力缺口**、**评测缺口**、**工程可用性缺口**、**叙事性 gap**
-- 若 gap 已被近作部分覆盖，要明确说明覆盖到什么程度
+- 若本地论文笔记已覆盖同类思路，要明确说明覆盖到什么程度
 - 如果 gap 依赖过时基线或过时问题设定，应直接标记为高风险
 
 ### 问题定义
@@ -126,16 +133,17 @@
 本项目 skills 统一放在 `.codex/skills/`。
 
 ### 可用 Skills
-- `research-ideation`: 研究构思启动、gap 分析与问题收敛主技能
-- `citation-verification`: 核查关键引文、年份、venue 与引用准确性
-- `daily-paper-generator`: 快速扫描近作并生成待深挖论文列表
+- `research-ideation`: 基于用户 brief 与 `papers/**/*.md` 做问题梳理、gap 分析与问题收敛
+- `idea-generator`: 基于用户提供的方向 Markdown 与 `papers/` 中的论文方法 Markdown 生成一个更合理的候选 idea
+- `citation-verification`: 基于本地论文笔记核查关键引文、年份、venue 与 claim 是否一致
+- `daily-paper-generator`: 从本地 `papers/**/*.md` 中筛选值得优先阅读或复核的论文笔记
 - `kaggle-learner`: 提炼可迁移 baseline、工程技巧与竞赛启发
 - `planning-with-files`: 把讨论结果整理成可继续推进的 Markdown 计划
 
 ### Skill 使用协议
 - 每次响应前，先判断当前问题是否命中本项目某个 skill
 - 优先使用最小必要 skill 集合，不机械展开全部 skills
-- 若引用、年份、venue、近作时间线会影响判断，优先考虑 `citation-verification` 或实时检索
+- 若判断依赖论文证据，默认先看本地 `papers/**/*.md`
 - 若需要输出持续推进文档，优先考虑 `planning-with-files`
 
 ---
@@ -152,16 +160,16 @@ Before responding to ANY user message:
 ## Agents
 
 ### 可用 Agents
-- `literature-reviewer`: 文献检索、主题归纳、gap 识别与 novelty 风险判断
+- `literature-reviewer`: 本地论文归纳、主题对比、gap 识别与 novelty 风险判断
 - `paper-miner`: 从强论文中抽取 framing、method pattern 与 evaluation 模板
 - `kaggle-miner`: 从 Kaggle 解法中提炼 baseline、工程 heuristic 与数据处理经验
 
 ### Agent 调度规则
-1. literature landscape 或 gap 判断优先 `literature-reviewer`
+1. 本地论文图谱整理或 gap 判断优先 `literature-reviewer`
 2. 需要抽取强论文写法、实验组织或 framing 模式时优先 `paper-miner`
 3. 需要工程 baseline、数据技巧或竞赛启发时优先 `kaggle-miner`
 4. 若任务足够聚焦，优先本地直接完成，不为“显得高级”而强行起 agent
-5. 多条独立线索可并行，但必须避免重复检索同一问题
+5. 多条独立线索可并行，但必须避免重复读取同一批本地论文笔记
 
 ---
 
@@ -179,6 +187,7 @@ Before responding to ANY user message:
 ### 引用记录
 - 记录论文时尽量包含年份、venue、任务和比较关系
 - 若仅看到了摘要或二手总结，要明确标注证据层级
+- 若本地论文笔记缺少关键信息，要明确写成“本地证据不足”
 
 ---
 
@@ -188,6 +197,7 @@ Before responding to ANY user message:
 - `.codex/config.toml`：项目级 Codex 配置
 - `.codex/agents/`：agent role 配置
 - `.codex/skills/`：项目 skills
+- `papers/`：本地论文方法 Markdown
 
 说明：
 - `AGENTS.md` 放项目根目录，便于按目录作用域生效
@@ -202,7 +212,7 @@ When starting a new session, ALWAYS:
 1. Check git status and current workspace state
 2. Identify the current topic, constraints, and target problem statement
 3. List project-local skills that are likely relevant
-4. Decide whether recent papers, venue rules, or citations need live verification
+4. Check whether the user has provided a valid Markdown brief and whether `papers/**/*.md` contains usable local evidence
 
 ---
 
@@ -219,7 +229,7 @@ When starting a new session, ALWAYS:
 • [当前 idea 的清晰度 / 风险 / 仍缺失的关键证据]
 
 💡 下一步建议
-1. [是否继续补文献]
+1. [是否继续补本地论文笔记]
 2. [是否重写 research question]
 3. [是否进入最小验证设计]
 ```
@@ -231,4 +241,4 @@ When starting a new session, ALWAYS:
 - 不伪造 citation、实验结果、时间线或文献结论
 - 不把未读全文的论文说成“已经确认支持某结论”
 - 不在项目文件中硬编码 API key、token、密码等敏感信息
-- 需要引用外部资料时，优先引用论文原文、作者页面、官方文档或 venue 官方页面
+- 若结论仅来自本地论文笔记，必须明确说明证据层级，不得包装成已完成全网核实
