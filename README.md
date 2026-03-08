@@ -1,14 +1,16 @@
 # Idea Codex
 
-面向 **Idea stage** 的 Codex CLI 配置仓库，主流程只使用两类本地材料：
+面向 **Idea stage** 的 Codex CLI 配置仓库，主流程是 local-first，并优先使用两类本地材料：
 - 用户运行时提供的方向 Markdown
 - `papers/**/*.md` 中的论文方法笔记
+
+当本地语料不足、过旧，或需要扩展最近邻工作时，`research-ideation` 允许补充在线论文搜索，优先使用 Exa MCP。
 
 它用于把模糊研究兴趣收敛成一个更合理、可验证、可继续推进的 idea。
 
 ## 这个仓库做什么
 
-- 从本地 `papers/**/*.md` 建立方法图谱
+- 从本地 `papers/**/*.md` 建立方法图谱，并在必要时在线扩展相邻工作
 - 区分真实 gap 和叙事性 gap
 - 基于用户 brief 生成一个更强的 candidate idea
 - 输出 research question、风险判断和最小验证草案
@@ -40,7 +42,7 @@
 - reasoning：`xhigh`
 - sandbox：`workspace-write`
 - features：`multi_agent`、`memories`、`skill_approval`、`fast_mode`、`child_agents_md`、`default_mode_request_user_input`
-- 论文来源：`idea` 生成阶段只读取本地 `papers/**/*.md`
+- 论文来源：默认先读本地 `papers/**/*.md`，必要时由 `research-ideation` 补充在线论文搜索
 
 ## Agents
 
@@ -66,16 +68,17 @@
 ## 论文来源规则
 
 - 用户必须提供一个方向 Markdown 路径，例如 `input_md_path`
-- 论文语料只来自 `papers/**/*.md`
-- `idea` 生成阶段不使用 Zotero、WebSearch、arXiv 或其他在线论文检索
-- 如果后续要核实 novelty 或 feasibility，应单独进入后置核实阶段，不属于默认 ideation 流程
+- `papers/**/*.md` 是默认且优先的论文语料
+- 当本地语料不足、主题变化快或用户明确要求扩展相邻工作时，`research-ideation` 可以补充 Exa MCP 或 WebSearch 做在线论文搜索
+- 在线搜索结果应标注证据层级；摘要级证据不能包装成完整论文结论
+- 若后续需要更强 novelty / feasibility 核实，可继续进入更重的后置核实阶段
 
 ## 推荐用法
 
 比较稳的顺序是：
 
 ```text
-用户 brief -> 筛选相关 papers/*.md -> 方法/假设/缺口整理 -> 生成一个 candidate idea -> 最小验证设计
+用户 brief -> 筛选相关 papers/*.md -> 必要时在线扩展相邻工作 -> 方法/假设/缺口整理 -> 生成一个 candidate idea -> 最小验证设计
 ```
 
 开始前优先看 `AGENTS.md`；生成 idea 时优先使用 `prompts/generate_idea.md` 与 `papers/**/*.md`。

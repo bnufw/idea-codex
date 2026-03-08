@@ -47,7 +47,7 @@
 ### 任务执行原则
 - 复杂问题先收敛问题定义，再扩展本地论文与方案
 - `idea` 生成阶段的研究判断优先基于用户输入 Markdown、`papers/**/*.md`、真实代码和真实结果
-- 不把 Zotero、WebSearch、arXiv 或其他在线论文检索当作默认论文来源
+- 不把 WebSearch、arXiv 或其他在线论文检索当作唯一入口；当本地语料不足、过旧或用户明确要求时，`research-ideation` 可以补充在线论文搜索，优先使用 Exa MCP
 - 若证据不足以支撑“novel”“first”“state of the art”之类表述，必须明确降级措辞
 - 不捏造引用、不脑补相关工作、不把猜测包装成结论
 
@@ -60,31 +60,34 @@
 
 ## 核心工作流
 
-### Idea 工作流（本地 papers-only）
+### Idea 工作流（Local-First，可联网扩展）
 
 ```
-问题空间梳理 → 本地论文方法图谱 → gap 判断 → candidate idea 收敛 → 最小验证设计
+问题空间梳理 → 本地论文方法图谱 → 必要时在线扩展相邻工作 → gap 判断 → candidate idea 收敛 → 最小验证设计
 ```
 
 | 阶段 | 核心目标 | 典型输出 |
 |------|----------|----------|
 | 1. 问题空间梳理 | 明确主题、约束、目标场景 | 主题边界、关键词、排除项 |
 | 2. 本地论文方法图谱 | 从 `papers/**/*.md` 提炼方法、假设与局限 | method map、paper shortlist |
-| 3. gap 判断 | 区分真实空缺与叙事性空缺 | gap list、closest baseline 对照 |
-| 4. candidate idea 收敛 | 把用户兴趣改写成一个更合理的 idea | candidate idea |
-| 5. 最小验证设计 | 评估是否值得进入实现阶段 | novelty / feasibility / risk 对照表、实验草案 |
+| 3. 在线扩展相邻工作 | 在本地语料不足时用 Exa MCP / WebSearch 补近邻论文 | expanded shortlist、evidence tiers |
+| 4. gap 判断 | 区分真实空缺与叙事性空缺 | gap list、closest baseline 对照 |
+| 5. candidate idea 收敛 | 把用户兴趣改写成一个更合理的 idea | candidate idea |
+| 6. 最小验证设计 | 评估是否值得进入实现阶段 | novelty / feasibility / risk 对照表、实验草案 |
 
 ### 支撑工作流
 
-- **本地论文源**: `papers/**/*.md` 是默认且唯一的 ideation 论文来源
+- **本地论文源**: `papers/**/*.md` 是默认且优先的 ideation 论文来源
+- **在线论文扩展**: `research-ideation` 在本地语料不足、主题较新或用户明确要求时，可补充 Exa MCP / WebSearch 做论文搜索
 - **用户 brief**: 运行时必须提供一个 Markdown 输入路径，用来说明方向、约束、非目标和偏好
 - **强论文拆解**: 用 `paper-miner` 抽取 framing、method pattern 与 evaluation 设计
 - **工程启发补充**: 用 `kaggle-miner` 找可迁移 baseline、数据处理技巧和工程约束
 
 ### 阶段边界
 
-- `idea` 生成阶段：只读本地 `papers/**/*.md` 与用户 brief
-- novelty / feasibility 核实：若明确进入后置核实阶段，可单独使用联网子代理；该阶段不属于默认 ideation workflow
+- `idea` 生成阶段：默认先读本地 `papers/**/*.md` 与用户 brief；若本地证据不足以界定相邻工作，`research-ideation` 可补充在线论文搜索
+- 使用在线论文搜索时，必须显式区分本地笔记证据、在线摘要级证据和更强证据
+- novelty / feasibility 核实：若需要比摘要级搜索更强的确认，可继续进入后置核实阶段
 
 ---
 
@@ -102,7 +105,7 @@
 - **summary-first**：先给结论，再展开依据
 - **assumption 明确**：哪些是用户已给条件，哪些是暂定前提
 - **uncertainty 明确**：哪些结论依赖未验证信息
-- **evidence 对齐**：每个核心判断都能追溯到本地论文笔记、代码或结果
+- **evidence 对齐**：每个核心判断都能追溯到本地论文笔记、在线检索结果、代码或结果，并标注证据层级
 - **边界清楚**：明确说明 idea 还缺什么，不能默认已经 ready
 
 ---
@@ -143,7 +146,7 @@
 ### Skill 使用协议
 - 每次响应前，先判断当前问题是否命中本项目某个 skill
 - 优先使用最小必要 skill 集合，不机械展开全部 skills
-- 若判断依赖论文证据，默认先看本地 `papers/**/*.md`
+- 若判断依赖论文证据，默认先看本地 `papers/**/*.md`，再按需扩展 Exa MCP / WebSearch
 - 若需要输出持续推进文档，优先考虑 `planning-with-files`
 
 ---
@@ -212,7 +215,7 @@ When starting a new session, ALWAYS:
 1. Check git status and current workspace state
 2. Identify the current topic, constraints, and target problem statement
 3. List project-local skills that are likely relevant
-4. Check whether the user has provided a valid Markdown brief and whether `papers/**/*.md` contains usable local evidence
+4. Check whether the user has provided a valid Markdown brief, whether `papers/**/*.md` contains usable local evidence, and whether online paper expansion is needed
 
 ---
 
