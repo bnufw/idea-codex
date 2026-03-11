@@ -1,5 +1,5 @@
 # Idea Project 配置
-
+有任何模糊的地方，请使用 `request_user_input` 与用户交互澄清。
 ## 项目概述
 
 **Idea Project** - 面向科研前期探索的独立 Codex CLI 配置
@@ -138,6 +138,7 @@
 ### 可用 Skills
 - `research-ideation`: 基于用户 brief 与 `papers/**/*.md` 做问题梳理、gap 分析与问题收敛
 - `idea-generator`: 基于用户提供的方向 Markdown 与 `papers/` 中的论文方法 Markdown 生成一个更合理的候选 idea
+- `idea-prisma`: 独立的 Prisma-style dual-branch skill；同时产出 Codex 分支与 skill-local Gemini 分支的完整 idea，再写评审 Markdown 选择更好的一个
 - `citation-verification`: 基于本地论文笔记核查关键引文、年份、venue 与 claim 是否一致
 - `daily-paper-generator`: 从本地 `papers/**/*.md` 中筛选值得优先阅读或复核的论文笔记
 - `kaggle-learner`: 提炼可迁移 baseline、工程技巧与竞赛启发

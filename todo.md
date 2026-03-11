@@ -12,3 +12,9 @@ direction(research-ideation)->具体做法(Prisma)->
 
 Prisma项目解决问题的能力很强，当我讨论完direction后，我需要把此direction交给Prisma，去得到一个完整的idea内容(用于发表oral级别的论文)。你需要借鉴Prisma项目的核心流程，把它写成python。我会在.env中配置Gemini的key，base_url和model_name。
 写成脚本，传两个参数，一个是direction一个是papers目录下的参考文章，传入时要简短说明这两个参数一个是direction，一个是现有相关论文的方法
+
+# 3.9
+-[] 测试一下Prisma流程，输出在runs目录下了
+-[] 把idea_prisma做成一个skill
+
+research-ideation的输出为
