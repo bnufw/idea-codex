@@ -63,7 +63,7 @@
 ### Idea 工作流（Local-First，可联网扩展）
 
 ```
-问题空间梳理 → 本地论文方法图谱 → 必要时在线扩展相邻工作 → gap 判断 → candidate idea 收敛 → 最小验证设计
+问题空间梳理 → 必要时用 `request_user_input` 补齐关键槽位 → 本地论文方法图谱 → 必要时在线扩展相邻工作 → gap 判断 → candidate idea 收敛 → 最小验证设计
 ```
 
 | 阶段 | 核心目标 | 典型输出 |
@@ -79,13 +79,13 @@
 
 - **本地论文源**: `papers/**/*.md` 是默认且优先的 ideation 论文来源
 - **在线论文扩展**: `research-ideation` 在本地语料不足、主题较新或用户明确要求时，可补充 Exa MCP / WebSearch 做论文搜索
-- **用户 brief**: 运行时必须提供一个 Markdown 输入路径，用来说明方向、约束、非目标和偏好
+- **用户 brief**: 运行时必须提供一个 Markdown 输入路径，用来说明方向、约束、非目标和偏好；若缺少 target scenario、hard constraints、non-goals 或“什么样的结果才算更好的 idea”，优先用一轮 `request_user_input` 补齐
 - **强论文拆解**: 用 `paper-miner` 抽取 framing、method pattern 与 evaluation 设计
 - **工程启发补充**: 用 `kaggle-miner` 找可迁移 baseline、数据处理技巧和工程约束
 
 ### 阶段边界
 
-- `idea` 生成阶段：默认先读本地 `papers/**/*.md` 与用户 brief；若本地证据不足以界定相邻工作，`research-ideation` 可补充在线论文搜索
+- `idea` 生成阶段：默认先读用户 brief；若 brief 缺关键槽位，先用一轮 `request_user_input` 补齐，再读本地 `papers/**/*.md`；若本地证据不足以界定相邻工作，`research-ideation` 可补充在线论文搜索
 - 使用在线论文搜索时，必须显式区分本地笔记证据、在线摘要级证据和更强证据
 - novelty / feasibility 核实：若需要比摘要级搜索更强的确认，可继续进入后置核实阶段
 
@@ -136,7 +136,7 @@
 本项目 skills 统一放在 `.codex/skills/`。
 
 ### 可用 Skills
-- `research-ideation`: 基于用户 brief 与 `papers/**/*.md` 做问题梳理、gap 分析与问题收敛
+- `research-ideation`: 基于用户 brief 与 `papers/**/*.md` 做问题梳理、gap 分析与问题收敛；必要时先用一轮 `request_user_input` 补齐关键信息
 - `idea-generator`: 基于用户提供的方向 Markdown 与 `papers/` 中的论文方法 Markdown 生成一个更合理的候选 idea
 - `idea-prisma`: 独立的 Prisma-style dual-branch skill；同时产出 Codex 分支与 skill-local Gemini 分支的完整 idea，再写评审 Markdown 选择更好的一个
 - `citation-verification`: 基于本地论文笔记核查关键引文、年份、venue 与 claim 是否一致

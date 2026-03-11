@@ -4,7 +4,7 @@
 - 用户运行时提供的方向 Markdown
 - `papers/**/*.md` 中的论文方法笔记
 
-当本地语料不足、过旧，或需要扩展最近邻工作时，`research-ideation` 允许补充在线论文搜索，优先使用 Exa MCP。
+当 brief 过于模糊、会影响 ideation 判断时，`research-ideation` 应先用一轮 `request_user_input` 补齐关键信息；当本地语料不足、过旧，或需要扩展最近邻工作时，它再补充在线论文搜索，优先使用 Exa MCP。
 
 它用于把模糊研究兴趣收敛成一个更合理、可验证、可继续推进的 idea。
 
@@ -70,6 +70,7 @@
 ## 论文来源规则
 
 - 用户必须提供一个方向 Markdown 路径，例如 `input_md_path`
+- 如果 brief 缺少 target scenario、hard constraints、non-goals 或“什么样的结果才算更好的 idea”，`research-ideation` 应先用一轮 `request_user_input` 补齐，再继续
 - `papers/**/*.md` 是默认且优先的论文语料
 - 当本地语料不足、主题变化快或用户明确要求扩展相邻工作时，`research-ideation` 可以补充 Exa MCP 或 WebSearch 做在线论文搜索
 - 在线搜索结果应标注证据层级；摘要级证据不能包装成完整论文结论
@@ -80,7 +81,7 @@
 比较稳的顺序是：
 
 ```text
-用户 brief -> 筛选相关 papers/*.md -> 必要时在线扩展相邻工作 -> 方法/假设/缺口整理 -> 生成一个 candidate idea -> 最小验证设计
+用户 brief -> 必要时一轮 request_user_input 补齐关键槽位 -> 筛选相关 papers/*.md -> 必要时在线扩展相邻工作 -> 方法/假设/缺口整理 -> 生成一个 candidate idea -> 最小验证设计
 ```
 
 开始前优先看 `AGENTS.md`；生成 idea 时优先使用 `prompts/generate_idea.md` 与 `papers/**/*.md`。

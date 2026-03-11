@@ -1,7 +1,6 @@
 ---
-name: Research Ideation
+name: research-ideation
 description: Use when the user wants to brainstorm research ideas, identify gaps, define a research question, or plan an early-stage project from a user-provided Markdown brief, local paper notes in `papers/**/*.md`, and optional online paper search when local evidence is insufficient.
-version: 0.3.0
 ---
 
 # Research Ideation
@@ -34,6 +33,7 @@ The user should provide a Markdown file describing as much of the following as p
 - topic or problem statement
 - target task or scenario
 - hard constraints and non-goals
+- what would count as a better idea
 - known pain points or hypotheses
 - optional target venue, dataset, metric, or engineering preference
 
@@ -62,30 +62,41 @@ Rules:
 ## Workflow
 
 1. Read the user brief first.
-   - Extract problem, constraints, assumptions, non-goals, and what counts as a better idea.
+   - Extract problem, constraints, assumptions, non-goals, and what would count as a better idea.
 
-2. Build a local paper map.
+2. Clarify blocking gaps before reading papers when needed.
+   - If the brief is missing any of these fields in a way that would change the ideation result, use `request_user_input` before continuing:
+     - target task or scenario
+     - hard constraints
+     - non-goals
+     - what would count as a better idea
+   - Ask one batched clarification round only.
+   - Ask only the 1 to 3 highest-leverage questions.
+   - Treat the user's answers as an in-session supplement to the brief.
+   - Do not require the user to rewrite the Markdown file before continuing.
+
+3. Build a local paper map.
    - Find the relevant files in `papers/**/*.md`.
    - Extract method family, core mechanism, assumptions, strengths, limitations, and reusable patterns.
 
-3. Expand the paper map online when needed.
+4. Expand the paper map online when needed.
    - Search for recent or adjacent papers with Exa MCP.
    - Use titles, abstracts, venues, and dates to identify the strongest nearest neighbors.
    - Keep evidence tiered: online discovery is not the same as full-paper verification.
 
-4. Compare the brief against the grounded paper map.
+5. Compare the brief against the grounded paper map.
    - Identify what is already covered.
    - Identify what is missing, contradictory, weakly evaluated, or overly narrow.
 
-5. Produce a grounded gap view.
+6. Produce a grounded gap view.
    - Distinguish real capability gaps from narrative or packaging gaps.
    - Call out where the evidence is strong and where it is incomplete.
    - Separate local-note evidence from online-search evidence.
 
-6. Form one or more testable candidate questions.
+7. Form one or more testable candidate questions.
    - Keep the question tied to a concrete task, comparison target, metric, and failure condition.
 
-7. Draft a minimal validation plan.
+8. Draft a minimal validation plan.
    - State what evidence would justify implementation.
    - State what would falsify the idea early.
 
@@ -109,6 +120,7 @@ Rules:
 - Respond in Chinese.
 - Keep the answer summary-first.
 - Make reused patterns and changed assumptions explicit.
+- Make clarification-derived assumptions explicit when `request_user_input` was used.
 - State uncertainty and missing evidence explicitly.
 - Label the evidence source when both local notes and online paper search are used.
 - Prefer outputs such as gap lists, candidate questions, risk tables, and minimal validation plans.
@@ -116,6 +128,8 @@ Rules:
 ## Failure Handling
 
 - Missing user brief: ask for a valid Markdown path.
+- Materially underspecified brief: use one batched `request_user_input` round before paper mapping.
+- Clarification still unavailable: stop and state which blocking fields are still missing.
 - Empty `papers/`: say that local paper grounding is unavailable and switch to online paper search with downgraded confidence, or stop if the user wants local-only grounding.
 - Irrelevant local notes: say that the current corpus does not support the requested direction well.
 - Online search unavailable: continue with local notes only and clearly mark the literature boundary as incomplete.
