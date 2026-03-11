@@ -146,6 +146,7 @@
 
 ### Skill 使用协议
 - 每次响应前，先判断当前问题是否命中本项目某个 skill
+- 若用户表达“开始研究”“文献综述”“生成阅读笔记”等意图，优先考虑 `research-ideation`，必要时联动 `literature-reviewer` 与 Zotero MCP
 - 优先使用最小必要 skill 集合，不机械展开全部 skills
 - 若判断依赖论文证据，默认先看本地 `papers/**/*.md`，再按需扩展 Exa MCP / WebSearch
 - 若需要输出持续推进文档，优先考虑 `planning-with-files`
