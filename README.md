@@ -122,10 +122,19 @@ input_md_path + papers/**/*.md
 
 ### Gemini 分支环境变量
 
-在 `.env` 中配置：
+先复制模板，再在本地 `.env` 中填写真实密钥：
+
+```bash
+cp .env.example .env
+```
 
 ```env
 GEMINI_API_KEY=...
+```
+
+可选覆盖项：
+
+```env
 GEMINI_BASE_URL=https://generativelanguage.googleapis.com/v1beta
 GEMINI_MODEL_NAME=gemini-3-pro-preview
 ```
