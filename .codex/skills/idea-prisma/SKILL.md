@@ -125,7 +125,15 @@ Run experts against:
 - the selected local paper notes
 - the manager-defined task prompt
 
-Use child agents only for focused expert subtasks. Do not spawn agents for the whole workflow.
+Use child agents for focused expert subtasks when they materially improve separation of concerns.
+If the user explicitly asks to use child agents, the Codex branch must delegate at least one suitable expert subtask instead of keeping the whole branch local.
+Do not spawn agents for the whole workflow.
+
+Child-agent routing rules:
+- prefer a preconfigured specialist agent when one is a clear fit for the current expert objective
+- if no existing specialist is a good fit, create a task-specific child agent with a narrow role and prompt derived from the expert objective
+- keep manager, review, synthesis, and winner selection in the parent agent so the final decision boundary stays in one place
+- record each delegated subtask in `codex/run_trace.md`, including the delegated expert role, why delegation was used, and whether the child agent was preconfigured or task-specific
 
 Write every expert result into `codex/experts.json`.
 
